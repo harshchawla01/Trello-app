@@ -1,5 +1,15 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+import Login from "../Auth/Login";
+
 const Landing = () => {
+  const { user } = useSelector((state) => state.auth);
+
+  if (user) {
+    return <Navigate to="/boards" />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-200">
       <div className="container mx-auto px-4 py-12">
@@ -9,7 +19,9 @@ const Landing = () => {
             A simple and intuitive task management to help you organize your
             work.
           </p>
-          <div>Firebase Login functionality</div>
+          <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4">
+            <Login />
+          </div>
         </div>
 
         <div className="max-w-4xl mx-auto">
