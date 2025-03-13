@@ -5,14 +5,22 @@ import Landing from "./components/Layout/Landing";
 
 const App = () => {
   return (
-    <div>
-      <Router>
-        <div className="min-h-screen flex flex-col">
-          <Header />
-          <Landing />
-        </div>
-      </Router>
-    </div>
+    <Router>
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow">
+          <Routes>
+            <Route
+              path="/"
+              element={user ? <Navigate to="/boards" replace /> : <Landing />}
+            />
+            <Route element={<PrivateRoute />}>
+              <Route path="/boards" element={<BoardList />} />
+            </Route>
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 };
 
