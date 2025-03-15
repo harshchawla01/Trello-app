@@ -75,9 +75,36 @@ export const updateBoard = (boardId, boardData) => async (dispatch) => {
 
 export const deleteBoard = (boardId) => async (dispatch) => {
   try {
+    const batch = writeBatch(db);
+
     const boardRef = doc(db, "boards", boardId);
-    await deleteDoc(boardRef);
+    batch.delete(boardRef);
+
+    const listsRef = collection(db, "lists");
+    const listsQuery = query(listsRef, where("boardId", "==", boardId));
+    const listsSnapshot = await getDocs(listsQuery);
+
+    const listIds = [];
+    listsSnapshot.forEach((doc) => {
+      batch.delete(doc.ref);
+      listIds.push(doc.id); // for store update after batch commit
+    });
+
+    const cardsRef = collection(db, "cards");
+    const cardsQuery = query(cardsRef, where("boardId", "==", boardId));
+    const cardsSnapshot = await getDocs(cardsQuery);
+
+    const cardIds = [];
+    cardsSnapshot.forEach((doc) => {
+      batch.delete(doc.ref);
+      cardIds.push(doc.id);
+    });
+
+    await batch.commit();
+
     dispatch(deleteBoardSuccess(boardId));
+    listIds.forEach((id) => dispatch(deleteListSuccess(id)));
+    cardIds.forEach((id) => dispatch(deleteCardSuccess(id)));
   } catch (error) {
     console.error("Error deleting board:", error);
   }

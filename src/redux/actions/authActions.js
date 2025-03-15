@@ -1,6 +1,5 @@
 import { signInWithPopup, signOut } from "firebase/auth";
 import { auth, googleProvider } from "../../firebase/config";
-// import axios from "axios"; // Added missing import
 import {
   loginStart,
   loginSuccess,

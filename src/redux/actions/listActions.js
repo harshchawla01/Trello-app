@@ -7,6 +7,7 @@ import {
   doc,
   query,
   where,
+  writeBatch,
 } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import {
@@ -17,6 +18,7 @@ import {
   updateListSuccess,
   deleteListSuccess,
 } from "../reducers/listReducer";
+import { deleteCardSuccess } from "../reducers/cardReducer";
 
 export const fetchLists = (boardId) => async (dispatch) => {
   try {
@@ -29,9 +31,6 @@ export const fetchLists = (boardId) => async (dispatch) => {
       id: doc.id,
       ...doc.data(),
     }));
-
-    // Sort lists by position
-    lists.sort((a, b) => a.position - b.position);
 
     dispatch(fetchListsSuccess(lists));
   } catch (error) {
@@ -61,9 +60,27 @@ export const updateList = (listId, listData) => async (dispatch) => {
 
 export const deleteList = (listId) => async (dispatch) => {
   try {
+    const batch = writeBatch(db);
+
     const listRef = doc(db, "lists", listId);
-    await deleteDoc(listRef);
+    batch.delete(listRef);
+
+    const cardsRef = collection(db, "cards");
+    const cardsQuery = query(cardsRef, where("listId", "==", listId));
+    const cardsSnapshot = await getDocs(cardsQuery);
+
+    const cardIds = [];
+    cardsSnapshot.forEach((doc) => {
+      batch.delete(doc.ref);
+      cardIds.push(doc.id);
+    });
+
+    // Commit the batch
+    await batch.commit();
+
+    // Update the Redux store
     dispatch(deleteListSuccess(listId));
+    cardIds.forEach((id) => dispatch(deleteCardSuccess(id)));
   } catch (error) {
     console.error("Error deleting list:", error);
   }

@@ -30,6 +30,12 @@ export const fetchCards = (boardId) => async (dispatch) => {
       ...doc.data(),
     }));
 
+    cards.sort((a, b) => {
+      if (!a.createdAt) return 1;
+      if (!b.createdAt) return -1;
+      return new Date(a.createdAt) - new Date(b.createdAt);
+    });
+
     dispatch(fetchCardsSuccess(cards));
   } catch (error) {
     dispatch(fetchCardsFailure(error.message));
@@ -38,9 +44,14 @@ export const fetchCards = (boardId) => async (dispatch) => {
 
 export const addCard = (cardData) => async (dispatch) => {
   try {
+    const dataToAdd = {
+      ...cardData,
+      createdAt: cardData.createdAt || new Date().toISOString(),
+    };
+
     const cardsRef = collection(db, "cards");
-    const docRef = await addDoc(cardsRef, cardData);
-    dispatch(addCardSuccess({ id: docRef.id, ...cardData }));
+    const docRef = await addDoc(cardsRef, dataToAdd);
+    dispatch(addCardSuccess({ id: docRef.id, ...dataToAdd }));
   } catch (error) {
     console.error("Error adding card:", error);
   }
