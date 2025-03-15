@@ -76,3 +76,58 @@ export const deleteCard = (cardId) => async (dispatch) => {
     console.error("Error deleting card:", error);
   }
 };
+
+export const moveCard =
+  (cardId, fromListId, toListId, newPosition) => async (dispatch, getState) => {
+    try {
+      const state = getState();
+      const cards = state.cards.cards;
+      const cardToMove = cards.find((card) => card.id === cardId);
+
+      if (!cardToMove) {
+        console.error("Card not found:", cardId);
+        return;
+      }
+
+      // Check if the card is already in the target list
+      if (
+        cardToMove.listId === toListId &&
+        cardToMove.position === newPosition
+      ) {
+        return; // No need to move if it's already in the target list and position
+      }
+
+      // Find the highest position in the target list to place the card at the end
+      const cardsInTargetList = cards.filter(
+        (card) => card.listId === toListId
+      );
+      const highestPosition =
+        cardsInTargetList.length > 0
+          ? Math.max(...cardsInTargetList.map((card) => card.position))
+          : -1;
+
+      const position =
+        newPosition !== undefined ? newPosition : highestPosition + 1;
+
+      // Update the card in Firestore
+      const cardRef = doc(db, "cards", cardId);
+      await updateDoc(cardRef, {
+        listId: toListId,
+        position,
+        movedAt: new Date().toISOString(),
+      });
+
+      // Create updated card object
+      const updatedCard = {
+        ...cardToMove,
+        listId: toListId,
+        position,
+        movedAt: new Date().toISOString(),
+      };
+
+      // Update Redux state
+      dispatch(updateCardSuccess(updatedCard));
+    } catch (error) {
+      console.error("Error moving card:", error);
+    }
+  };

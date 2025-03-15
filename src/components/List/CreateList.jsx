@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addList } from "../../redux/actions/listActions";
+import { IoMdAdd } from "react-icons/io"; // Import the add icon
 
 const CreateList = ({ boardId }) => {
   const dispatch = useDispatch();
@@ -55,10 +56,10 @@ const CreateList = ({ boardId }) => {
         </form>
       ) : (
         <button
-          className="w-full text-left text-gray-600 hover:text-gray-800 p-2"
+          className="w-full text-left text-gray-600 hover:text-gray-800 p-2 flex items-center"
           onClick={() => setIsFormOpen(true)}
         >
-          + Add another list
+          <IoMdAdd className="mr-1" /> Add another list
         </button>
       )}
     </div>

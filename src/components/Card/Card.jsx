@@ -1,12 +1,29 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateCard, deleteCard } from "../../redux/actions/cardActions";
+import { FaEdit, FaTrash } from "react-icons/fa"; // Import edit and trash icons
+import { CSS } from "@dnd-kit/utilities";
+import { useSortable } from "@dnd-kit/sortable";
 
-const Card = ({ card, index }) => {
+const Card = ({ card, index, listId }) => {
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(card.title);
   const [description, setDescription] = useState(card.description || "");
+  // console.log(listId);
+
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: card.id,
+      data: {
+        listId,
+      },
+    });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   const handleUpdate = (e) => {
     e.preventDefault();
@@ -48,10 +65,10 @@ const Card = ({ card, index }) => {
           <div className="flex justify-between">
             <button
               type="button"
-              className="text-red-500 hover:text-red-700 text-sm"
+              className="text-red-500 hover:text-red-700 text-sm flex items-center"
               onClick={handleDelete}
             >
-              Delete
+              <FaTrash className="mr-1" size={12} /> Delete
             </button>
             <div>
               <button
@@ -72,11 +89,17 @@ const Card = ({ card, index }) => {
           </div>
         </form>
       ) : (
-        <div onClick={() => setIsEditing(true)} className="cursor-pointer">
-          <h4 className="font-medium">{card.title}</h4>
-          {card.description && (
-            <p className="text-gray-600 text-sm mt-1">{card.description}</p>
-          )}
+        <div
+          onClick={() => setIsEditing(true)}
+          className="cursor-pointer flex justify-between"
+        >
+          <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+            <h4 className="font-medium">{card.title}</h4>
+            {card.description && (
+              <p className="text-gray-600 text-sm mt-1">{card.description}</p>
+            )}
+          </div>
+          <FaEdit className="text-gray-400 hover:text-gray-600" size={14} />
         </div>
       )}
     </div>

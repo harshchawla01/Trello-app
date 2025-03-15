@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { updateList, deleteList } from "../../redux/actions/listActions";
 import Card from "../Card/Card";
+import { fetchCards } from "../../redux/actions/cardActions";
 import CreateCard from "../Card/CreateCard";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { BsThreeDotsVertical } from "react-icons/bs"; // Importing 3 dots icon
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { useParams } from "react-router-dom";
 
 const List = ({ list, index, cards }) => {
@@ -13,6 +18,12 @@ const List = ({ list, index, cards }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(list.title);
   const [showMenu, setShowMenu] = useState(false);
+
+  // useEffect(() => {
+  //   console.log(boardId);
+
+  //   dispatch(fetchCards(boardId));
+  // }, []);
 
   const handleUpdate = (e) => {
     e.preventDefault();
@@ -31,6 +42,10 @@ const List = ({ list, index, cards }) => {
       dispatch(deleteList(list.id));
     }
   };
+
+  // console.log(list.id);
+
+  const cardsId = cards.map((card) => card.id);
 
   return (
     <div className="bg-gray-100 rounded w-72 h-fit mx-2 shadow">
@@ -99,9 +114,16 @@ const List = ({ list, index, cards }) => {
       </div>
 
       <div className="p-2 min-h-[10px]">
-        {cards.map((card, cardIndex) => (
-          <Card key={card.id} card={card} index={cardIndex} listId={list.id} />
-        ))}
+        <SortableContext items={cardsId} strategy={verticalListSortingStrategy}>
+          {cards.map((card, cardIndex) => (
+            <Card
+              key={card.id}
+              card={card}
+              index={cardIndex}
+              listId={list.id}
+            />
+          ))}
+        </SortableContext>
       </div>
 
       <div className="p-2">

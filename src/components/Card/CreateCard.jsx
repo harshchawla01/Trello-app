@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addCard } from "../../redux/actions/cardActions";
+import { IoMdAdd } from "react-icons/io"; // Import the add icon
 
 const CreateCard = ({ listId, boardId }) => {
   const dispatch = useDispatch();
@@ -12,6 +13,7 @@ const CreateCard = ({ listId, boardId }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (title.trim()) {
+      // Get the current cards in this list to determine position
       const listCards = cards.filter((card) => card.listId === listId);
 
       dispatch(
@@ -68,10 +70,10 @@ const CreateCard = ({ listId, boardId }) => {
         </form>
       ) : (
         <button
-          className="w-full text-left text-gray-600 hover:text-gray-800 p-1"
+          className="w-full text-left text-gray-600 hover:text-gray-800 p-1 flex items-center"
           onClick={() => setIsFormOpen(true)}
         >
-          + Add a card
+          <IoMdAdd className="mr-1" /> Add a card
         </button>
       )}
     </div>
