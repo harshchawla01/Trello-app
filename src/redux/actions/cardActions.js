@@ -33,7 +33,7 @@ export const fetchCards = (boardId) => async (dispatch) => {
     cards.sort((a, b) => {
       if (!a.createdAt) return 1;
       if (!b.createdAt) return -1;
-      return new Date(a.createdAt) - new Date(b.createdAt);
+      return new Date(b.createdAt) - new Date(a.createdAt);
     });
 
     dispatch(fetchCardsSuccess(cards));

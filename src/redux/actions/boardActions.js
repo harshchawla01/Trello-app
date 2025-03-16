@@ -7,6 +7,7 @@ import {
   doc,
   query,
   where,
+  writeBatch,
 } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import {
@@ -17,6 +18,8 @@ import {
   updateBoardSuccess,
   deleteBoardSuccess,
 } from "../reducers/boardReducer";
+import { deleteListSuccess } from "../reducers/listReducer";
+import { deleteCardSuccess } from "../reducers/cardReducer";
 
 export const fetchBoards = (userId) => async (dispatch) => {
   try {
@@ -26,32 +29,23 @@ export const fetchBoards = (userId) => async (dispatch) => {
     const snapshot = await getDocs(q);
 
     const boards = snapshot.docs.map((doc) => ({
-      id: doc.id, // including id separately because doc.data() dooesn't contain the doc id
+      id: doc.id,
       ...doc.data(),
     }));
 
+    boards.sort((a, b) => {
+      if (!a.createdAt) return 1;
+      if (!b.createdAt) return -1;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+
     dispatch(fetchBoardsSuccess(boards));
+    return sortedBoards;
   } catch (error) {
     dispatch(fetchBoardsFailure(error.message));
+    throw error;
   }
 };
-
-/*
-
-QuerySnapshot Structure:
-docs: An array of all the documents matching the query, each represented as a QueryDocumentSnapshot.
-empty: A boolean indicating whether the QuerySnapshot is empty (i.e., contains no documents).
-size: The number of documents in the QuerySnapshot.
-forEach(callback): Iterates over each QueryDocumentSnapshot in the docs array, executing the provided callback function for each document.
-
-DocumentSnapshot Structure:
-id: The unique identifier (document ID) for the document within its collection.
-exists: A boolean indicating whether the document exists in the database.
-ref: A DocumentReference pointing to the document's location in the database.
-data(): A method that retrieves all fields in the document as an object. Returns undefined if the document doesn't exist.
-get(fieldPath): Retrieves the value of a specific field defined by fieldPath.
-
-*/
 
 export const addBoard = (boardData) => async (dispatch) => {
   try {

@@ -32,9 +32,17 @@ export const fetchLists = (boardId) => async (dispatch) => {
       ...doc.data(),
     }));
 
+    lists.sort((a, b) => {
+      if (!a.createdAt) return 1;
+      if (!b.createdAt) return -1;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+
     dispatch(fetchListsSuccess(lists));
+    return sortedLists;
   } catch (error) {
     dispatch(fetchListsFailure(error.message));
+    throw error;
   }
 };
 
