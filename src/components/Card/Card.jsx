@@ -33,6 +33,7 @@ const Card = ({ card, index, listId }) => {
           ...card,
           title: title.trim(),
           description: description.trim(),
+          createdAt: new Date().toISOString(),
         })
       );
       setIsEditing(false);

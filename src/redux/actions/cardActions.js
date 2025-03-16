@@ -46,7 +46,6 @@ export const addCard = (cardData) => async (dispatch) => {
   try {
     const dataToAdd = {
       ...cardData,
-      createdAt: cardData.createdAt || new Date().toISOString(),
     };
 
     const cardsRef = collection(db, "cards");

@@ -35,7 +35,7 @@ export const fetchLists = (boardId) => async (dispatch) => {
     lists.sort((a, b) => {
       if (!a.createdAt) return 1;
       if (!b.createdAt) return -1;
-      return new Date(b.createdAt) - new Date(a.createdAt);
+      return new Date(a.createdAt) - new Date(b.createdAt); //
     });
 
     dispatch(fetchListsSuccess(lists));

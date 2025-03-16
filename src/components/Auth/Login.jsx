@@ -13,9 +13,9 @@ const Login = () => {
     dispatch(loginWithGoogle());
   };
 
-  if (user) {
-    return <Navigate to="/boards" />;
-  }
+  // if (user) {
+  //   return <Navigate to="/boards" />;
+  // }
 
   return (
     <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">

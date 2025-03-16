@@ -59,7 +59,7 @@ const CreateList = ({ boardId }) => {
           className="w-full text-left text-gray-600 hover:text-gray-800 p-2 flex items-center"
           onClick={() => setIsFormOpen(true)}
         >
-          <IoMdAdd className="mr-1" /> Add another list
+          <IoMdAdd className="mr-1" /> Add a list
         </button>
       )}
     </div>

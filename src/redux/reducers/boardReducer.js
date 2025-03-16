@@ -23,7 +23,8 @@ const boardSlice = createSlice({
       state.error = action.payload;
     },
     addBoardSuccess: (state, action) => {
-      state.boards.push(action.payload);
+      // state.boards.push(action.payload);
+      state.boards = [action.payload, ...state.boards];
     },
     updateBoardSuccess: (state, action) => {
       const index = state.boards.findIndex(

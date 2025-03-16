@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import { fetchLists } from "../../redux/actions/listActions";
 import { fetchCards } from "../../redux/actions/cardActions";
 import List from "./List";
 import CreateList from "./CreateList";
-import { AiOutlineLoading3Quarters } from "react-icons/ai"; // Import loading icon
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { closestCorners, DndContext } from "@dnd-kit/core";
 import { DragOverlay } from "@dnd-kit/core";
 import Card from "../Card/Card";
@@ -17,8 +17,15 @@ const ListContainer = () => {
   const { lists, loading: listsLoading } = useSelector((state) => state.lists);
   const { cards, loading: cardsLoading } = useSelector((state) => state.cards);
   const { boards } = useSelector((state) => state.boards);
+  const { user } = useSelector((state) => state.auth);
   const currentBoard = boards.find((board) => board.id === boardId);
+  const boardBelongsToUser =
+    currentBoard && user && currentBoard.userId === user.uid; // Priority of '===' > '&&'
   const [activeCard, setActiveCard] = useState(null);
+
+  if (!currentBoard || !boardBelongsToUser) {
+    return <Navigate to="/boards" replace />;
+  }
 
   useEffect(() => {
     if (boardId) {

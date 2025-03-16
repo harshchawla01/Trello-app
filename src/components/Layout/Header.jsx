@@ -15,11 +15,8 @@ const Header = () => {
   return (
     <header className="bg-blue-600 text-white shadow-md">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <Link
-          to="/boards"
-          className="text-xl font-bold no-underline flex items-center"
-        >
-          <h2 className="text-white flex items-center gap-1 m-0">
+        <Link to="/boards" className="text-xl font-bold flex items-center">
+          <h2 className="text-white no-underline flex items-center gap-1 m-0">
             Trello <FaTrello className="inline" />
           </h2>
         </Link>

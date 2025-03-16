@@ -23,14 +23,16 @@ const cardSlice = createSlice({
       state.error = action.payload;
     },
     addCardSuccess: (state, action) => {
-      state.cards.push(action.payload);
+      // state.cards.push(action.payload);
+      state.cards.unshift(action.payload);
     },
     updateCardSuccess: (state, action) => {
       const index = state.cards.findIndex(
         (card) => card.id === action.payload.id
       );
       if (index !== -1) {
-        state.cards[index] = action.payload;
+        state.cards.splice(index, 1);
+        state.cards.unshift(action.payload);
       }
     },
     deleteCardSuccess: (state, action) => {

@@ -85,7 +85,7 @@ const BoardCard = ({ board }) => {
           <div className="flex justify-between items-center">
             <Link
               to={`/boards/${board.id}`}
-              className="flex-grow hover:text-blue-700 transition-colors"
+              className="flex-grow hover:text-blue-700 transition-colors no-underline"
             >
               <div className="flex items-center gap-2">
                 <FaClipboard className="text-gray-700" />

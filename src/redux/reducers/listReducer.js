@@ -24,6 +24,7 @@ const listSlice = createSlice({
     },
     addListSuccess: (state, action) => {
       state.lists.push(action.payload);
+      // state.lists = [action.payload, ...state.lists];
     },
     updateListSuccess: (state, action) => {
       const index = state.lists.findIndex(
