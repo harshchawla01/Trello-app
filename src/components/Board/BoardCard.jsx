@@ -89,7 +89,9 @@ const BoardCard = ({ board }) => {
             >
               <div className="flex items-center gap-2">
                 <FaClipboard className="text-gray-700" />
-                <h3 className="text-xl font-bold">{board.title}</h3>
+                <h3 className="text-xl no-underline font-bold">
+                  {board.title}
+                </h3>
               </div>
             </Link>
 

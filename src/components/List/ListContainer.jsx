@@ -24,14 +24,29 @@ const ListContainer = () => {
   const [activeCard, setActiveCard] = useState(null);
 
   if (!currentBoard || !boardBelongsToUser) {
+    // Kept it above useEffect so that the useEffect doesn't get registered before this if is checked to prevent unnecessary db calls for fetch.
     return <Navigate to="/boards" replace />;
   }
 
+  // useEffect(() => {
+  //   if (boardId) {
+  //     dispatch(fetchLists(boardId));
+  //     dispatch(fetchCards(boardId));
+  //   }
+  // }, [dispatch, boardId]);
+
   useEffect(() => {
+    const abortController = new AbortController();
+
     if (boardId) {
-      dispatch(fetchLists(boardId));
-      dispatch(fetchCards(boardId));
+      dispatch(fetchLists(boardId, abortController.signal));
+      dispatch(fetchCards(boardId, abortController.signal));
     }
+
+    // Cleanup: abort any in-flight requests when component unmounts
+    return () => {
+      abortController.abort();
+    };
   }, [dispatch, boardId]);
 
   const handleDragStart = (e) => {

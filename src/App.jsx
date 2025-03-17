@@ -34,7 +34,7 @@ function App() {
           })
         );
       }
-      setAuthChecked(true);
+      // setAuthChecked(true);
     });
 
     return () => unsubscribe();
