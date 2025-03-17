@@ -48,7 +48,7 @@ const List = ({ list, index, cards }) => {
   const cardsId = cards.map((card) => card.id);
 
   return (
-    <div className="bg-gray-100 rounded w-72 h-fit mx-2 shadow">
+    <div className="bg-gray-100 rounded min-w-72 h-fit mx-2 shadow">
       <div className="p-2 flex justify-between items-center">
         {isEditing ? (
           <form onSubmit={handleUpdate} className="w-full">

@@ -17,9 +17,16 @@ const BoardList = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     if (user) {
       dispatch(fetchBoards(user.uid));
     }
+
+    // Cleanup: abort any in-flight requests when component unmounts
+    return () => {
+      abortController.abort();
+    };
   }, [dispatch, user]);
 
   if (loading) {

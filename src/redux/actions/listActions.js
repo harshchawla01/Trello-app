@@ -20,32 +20,6 @@ import {
 } from "../reducers/listReducer";
 import { deleteCardSuccess } from "../reducers/cardReducer";
 
-// export const fetchLists = (boardId) => async (dispatch) => {
-//   try {
-//     dispatch(fetchListsStart());
-//     const listsRef = collection(db, "lists");
-//     const q = query(listsRef, where("boardId", "==", boardId));
-//     const snapshot = await getDocs(q);
-
-//     const lists = snapshot.docs.map((doc) => ({
-//       id: doc.id,
-//       ...doc.data(),
-//     }));
-
-//     lists.sort((a, b) => {
-//       if (!a.createdAt) return 1;
-//       if (!b.createdAt) return -1;
-//       return new Date(a.createdAt) - new Date(b.createdAt); //
-//     });
-
-//     dispatch(fetchListsSuccess(lists));
-//     return sortedLists;
-//   } catch (error) {
-//     dispatch(fetchListsFailure(error.message));
-//     throw error;
-//   }
-// };
-
 export const fetchLists = (boardId, signal) => async (dispatch) => {
   try {
     dispatch(fetchListsStart());

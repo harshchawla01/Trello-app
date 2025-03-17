@@ -21,12 +21,13 @@ import {
 import { deleteListSuccess } from "../reducers/listReducer";
 import { deleteCardSuccess } from "../reducers/cardReducer";
 
-export const fetchBoards = (userId) => async (dispatch) => {
+export const fetchBoards = (userId, signal) => async (dispatch) => {
   try {
     dispatch(fetchBoardsStart());
     const boardsRef = collection(db, "boards");
     const q = query(boardsRef, where("userId", "==", userId));
-    const snapshot = await getDocs(q);
+    // Pass the signal to getDocs (supported in Firebase 9.9.0+)
+    const snapshot = await getDocs(q, { signal });
 
     const boards = snapshot.docs.map((doc) => ({
       id: doc.id,
@@ -42,7 +43,9 @@ export const fetchBoards = (userId) => async (dispatch) => {
     dispatch(fetchBoardsSuccess(boards));
     return sortedBoards;
   } catch (error) {
-    dispatch(fetchBoardsFailure(error.message));
+    if (error.name !== "AbortError") {
+      dispatch(fetchBoardsFailure(error.message));
+    }
     throw error;
   }
 };

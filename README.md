@@ -10,3 +10,5 @@ Cards and Boards are sorted by descending order of last modified date. (Newest f
 Lists are sorted by ascending order of last modified date. (Addition order)
 
 Updated cards are shifted to the top of the list.
+
+If you are logged in and close the application tab in you browser and reopen it when you need it again, you login is preserved across reloads till your auth token has not been expired.
